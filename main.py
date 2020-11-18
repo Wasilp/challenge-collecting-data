@@ -13,17 +13,16 @@ from selenium.webdriver.common.keys import Keys
 
 driver = webdriver.Chrome('/Users/wasilewski/Downloads/chromedriver')
 
-url = 'https://immo.vlan.be/fr/immobilier/maison?transactiontypes=a-vendre,en-vente-publique&propertysubtypes=maison,villa,immeuble-mixte,maison-de-maitre,fermette,bungalow,chalet,chateau&countries=belgique&noindex=1'
+url = 'https://www.zimmo.be/fr/biens/?status=1&type%5B0%5D=5&hash=82d1fed181cf30aaa8408f90d99003d3&priceIncludeUnknown=1&priceChangedOnly=0&bedroomsIncludeUnknown=1&bathroomsIncludeUnknown=1&constructionIncludeUnknown=1&livingAreaIncludeUnknown=1&landAreaIncludeUnknown=1&commercialAreaIncludeUnknown=1&yearOfConstructionIncludeUnknown=1&epcIncludeUnknown=1&queryCondition=and&includeNoPhotos=1&includeNoAddress=1&onlyRecent=0&onlyRecentlyUpdated=0&isPlus=0&region=none#gallery'
 
 
 driver.get(url)  
-innerHTML = driver.execute_script("return document.body.innerHTML")
 sleep(3)
-root=BeautifulSoup(innerHTML,"lxml") #parse HTML using beautifulsoup
-viewcount=root.find_element_by_class_name("paginations")   #find the value which you need.
-print(viewcount)
-# test = html.find_element_by_class_name('pagination')
+python_button = driver.find_element_by_xpath("//li[contains(@class, 'last')]/a").click()
+print(python_button)
+# And then it's like Beautiful soup
+soup=BeautifulSoup(driver.page_source,'xml')
 
-# print(test)
-# soup=BeautifulSoup(html.page_source)
-# print(soup.span)
+# And then it's like Beautiful soup
+print(soup)
+print(soup.text)
