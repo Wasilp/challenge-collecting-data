@@ -17,8 +17,13 @@ driver = webdriver.Chrome('/Users/wasilewski/Downloads/chromedriver')
 url = 'https://www.zimmo.be/fr/biens/?status=1&type%5B0%5D=5&hash=82d1fed181cf30aaa8408f90d99003d3&priceIncludeUnknown=1&priceChangedOnly=0&bedroomsIncludeUnknown=1&bathroomsIncludeUnknown=1&constructionIncludeUnknown=1&livingAreaIncludeUnknown=1&landAreaIncludeUnknown=1&commercialAreaIncludeUnknown=1&yearOfConstructionIncludeUnknown=1&epcIncludeUnknown=1&queryCondition=and&includeNoPhotos=1&includeNoAddress=1&onlyRecent=0&onlyRecentlyUpdated=0&isPlus=0&region=none#gallery'
 
 
-driver.get(url)  
-sleep(3)
+driver.get(url)
+# waiting 3 second to avoid any problem cause internet connection,
+driver.implicitly_wait(3)
+
+driver.find_element_by_id("didomi-notice-agree-button").click()
+driver.implicitly_wait(3)
+
 soup=BeautifulSoup(driver.page_source,'xml')
 link = []
 xpath = "//li[contains(@class, 'last disabled')]/a"
