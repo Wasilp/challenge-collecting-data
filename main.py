@@ -1,43 +1,14 @@
-from lxml import etree
-from bs4 import BeautifulSoup
-import requests
-import selenium
-from time import sleep
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from utils import hasxpath
+from threading import Thread
+from utils import LinkThread
+
+url_house = 'https://www.zimmo.be/fr/biens/?status=1&type%5B0%5D=5&hash=82d1fed181cf30aaa8408f90d99003d3&priceIncludeUnknown=1&priceChangedOnly=0&bedroomsIncludeUnknown=1&bathroomsIncludeUnknown=1&constructionIncludeUnknown=1&livingAreaIncludeUnknown=1&landAreaIncludeUnknown=1&commercialAreaIncludeUnknown=1&yearOfConstructionIncludeUnknown=1&epcIncludeUnknown=1&queryCondition=and&includeNoPhotos=1&includeNoAddress=1&onlyRecent=0&onlyRecentlyUpdated=0&isPlus=0&excludedEstates%5B0%5D=JLPFV&excludedEstates%5B1%5D=JOS24&excludedEstates%5B2%5D=JQ1LU&excludedEstates%5B3%5D=JQD7F&region=none#gallery'
+
+url_apt = 'https://www.zimmo.be/fr/biens/?status=1&type%5B0%5D=1&hash=35a4eea02e536082c87d606f0b71f597&priceIncludeUnknown=1&priceChangedOnly=0&bedroomsIncludeUnknown=1&bathroomsIncludeUnknown=1&constructionIncludeUnknown=1&livingAreaIncludeUnknown=1&landAreaIncludeUnknown=1&commercialAreaIncludeUnknown=1&yearOfConstructionIncludeUnknown=1&epcIncludeUnknown=1&queryCondition=and&includeNoPhotos=1&includeNoAddress=1&onlyRecent=0&onlyRecentlyUpdated=0&isPlus=0&excludedEstates%5B0%5D=JLPFV&excludedEstates%5B1%5D=JOS24&excludedEstates%5B2%5D=JQ1LU&excludedEstates%5B3%5D=JQD7F&region=none#gallery' 
 
 
-driver = webdriver.Chrome('/Users/wasilewski/Downloads/chromedriver')
 
-url = 'https://www.zimmo.be/fr/biens/?status=1&type%5B0%5D=5&hash=82d1fed181cf30aaa8408f90d99003d3&priceIncludeUnknown=1&priceChangedOnly=0&bedroomsIncludeUnknown=1&bathroomsIncludeUnknown=1&constructionIncludeUnknown=1&livingAreaIncludeUnknown=1&landAreaIncludeUnknown=1&commercialAreaIncludeUnknown=1&yearOfConstructionIncludeUnknown=1&epcIncludeUnknown=1&queryCondition=and&includeNoPhotos=1&includeNoAddress=1&onlyRecent=0&onlyRecentlyUpdated=0&isPlus=0&region=none#gallery'
+thread_1 = LinkThread(url_house)
+thread_2 = LinkThread(url_apt)
 
-
-driver.get(url)
-# waiting 3 second to avoid any problem cause internet connection,
-driver.implicitly_wait(3)
-
-driver.find_element_by_id("didomi-notice-agree-button").click()
-driver.implicitly_wait(3)
-
-soup=BeautifulSoup(driver.page_source,'xml')
-link = []
-xpath = "//li[contains(@class, 'last disabled')]/a"
-while hasxpath(driver,xpath) == False:
-    for elem in soup.find_all('div',attrs={"class" :"property-item_title "}):
-        link.append(elem.a.get('href'))
-    print(link,'Hello')
-    #Click action to manage pagination
-    python_button = driver.find_element_by_xpath("//li[contains(@class, 'last')]/a").click()
-    sleep(4)
-
-# And then it's like Beautiful soup
-# soup=BeautifulSoup(driver.page_source,'xml')
-
-# And then it's like Beautiful soup
-# print(soup)
-# print(soup.text)
+thread_1.start()
+thread_2.start()
