@@ -28,7 +28,7 @@ while hasxpath(driver,xpath) == False:
     print(link,'Hello')
     #Click action to manage pagination
     python_button = driver.find_element_by_xpath("//li[contains(@class, 'last')]/a").click()
-    sleep(2)
+    sleep(4)
 
 # And then it's like Beautiful soup
 # soup=BeautifulSoup(driver.page_source,'xml')
