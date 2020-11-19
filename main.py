@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from utils import hasxpath
 
 
 driver = webdriver.Chrome('/Users/wasilewski/Downloads/chromedriver')
@@ -18,11 +19,20 @@ url = 'https://www.zimmo.be/fr/biens/?status=1&type%5B0%5D=5&hash=82d1fed181cf30
 
 driver.get(url)  
 sleep(3)
-python_button = driver.find_element_by_xpath("//li[contains(@class, 'last')]/a").click()
-print(python_button)
-# And then it's like Beautiful soup
 soup=BeautifulSoup(driver.page_source,'xml')
+link = []
+xpath = "//li[contains(@class, 'last disabled')]/a"
+while hasxpath(driver,xpath) == False:
+    for elem in soup.find_all('div',attrs={"class" :"property-item_title "}):
+        link.append(elem.a.get('href'))
+    print(link,'Hello')
+    #Click action to manage pagination
+    python_button = driver.find_element_by_xpath("//li[contains(@class, 'last')]/a").click()
+    sleep(2)
 
 # And then it's like Beautiful soup
-print(soup)
-print(soup.text)
+# soup=BeautifulSoup(driver.page_source,'xml')
+
+# And then it's like Beautiful soup
+# print(soup)
+# print(soup.text)
