@@ -48,5 +48,53 @@ class LinkThread(Thread):
                     df.to_csv('zimmo_details_link.csv',  mode='a', header=False, index=False)
                 #Click action to manage pagination
                 driver.find_element_by_xpath("//li[contains(@class, 'last')]/a").click()
-                
                 sleep(4)
+            driver.close()
+
+
+
+
+
+class DetailsThread(Thread):
+     def __init__(self,
+            locality:int, 
+            price:int, 
+            room:int, 
+            area:int, 
+            kitchen:int, 
+            furnished:int, 
+            fire:int, 
+            terrace:int, 
+            terraceArea:int, 
+            garden:int, 
+            gardenArea:int, 
+            surface:int, 
+            facade:int, 
+            pool:int,
+            state:str,
+            saleType:str,
+            propertyType:str,
+            subType:str 
+        ):
+            Thread.__init__(self)
+            self.locality = locality
+            self.price = price
+            self.room = room
+            self.area = area
+            self.kitchen = kitchen
+            self.furnished = furnished
+            self.fire = fire
+            self.terrace = terrace
+            self.terraceArea = terraceArea
+            self.garden = garden
+            self.gardenArea = gardenArea
+            self.surface = surface
+            self.facade = facade
+            self.pool = pool
+            self.state = state
+            self.saleType = saleType
+            self.propertyType = propertyType
+            self.subType = subType
+
+    # def run(self):
+    #   #There we will make a csv file with all data and format them if needed        
