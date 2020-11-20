@@ -7,12 +7,17 @@ import requests
 import selenium
 from threading import Thread, RLock
 from time import sleep
+import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+
+
+
 
 def hasxpath(driver,xpath):
     try:
@@ -28,27 +33,36 @@ class LinkThread(Thread):
         self.url = url
 
     def run(self):
-        link = []
         lock = RLock()
+
         with lock:
-            driver = webdriver.Chrome('/Users/wasilewski/Downloads/chromedriver')
+            driver = uc.Chrome()
             driver.get(self.url)
-            # waiting 3 second to avoid any problem cause internet connection,
-            driver.implicitly_wait(3)
 
             driver.find_element_by_id("didomi-notice-agree-button").click()
             driver.implicitly_wait(3)
-
             soup=BeautifulSoup(driver.page_source,'xml')
             xpath = "//li[contains(@class, 'last disabled')]/a"
             while hasxpath(driver,xpath) == False:
+                current_url = driver.current_url
+                driver.get(current_url)
+                soup=BeautifulSoup(driver.page_source,'xml')
+                uniqueItem =[]
+                links = []
                 for elem in soup.find_all('div',attrs={"class" :"property-item_title "}):
-                    link = ('https://www.zimmo.be' + elem.a.get('href'))
-                    df=pd.DataFrame({link})
-                    df.to_csv('zimmo_details_link.csv',  mode='a', header=False, index=False)
+                    links.append('https://www.zimmo.be' + elem.a.get('href'))
+                    print(elem.a.get('href'))
+                for link in links:
+                    print(link)
+                    if link not in uniqueItem:
+                        uniqueItem.append(uniqueItem)
+                        df=pd.DataFrame({link})
+                        df.to_csv('zimmo_details_link.csv',  mode='a', header=False, index=False)
                 #Click action to manage pagination
                 driver.find_element_by_xpath("//li[contains(@class, 'last')]/a").click()
-                sleep(4)
+                # wait for URL to change with 15 seconds timeout
+                WebDriverWait(driver, 15).until(EC.url_changes(current_url))
+ 
             driver.close()
 
 
