@@ -1,20 +1,15 @@
 # Utils function for crapy scraping 
-from selenium import webdriver
 from lxml import etree
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
 import selenium
 from threading import Thread, RLock
-from time import sleep
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 
 
 
@@ -70,45 +65,29 @@ class LinkThread(Thread):
 
 
 class DetailsThread(Thread):
-     def __init__(self,
-            locality:int, 
-            price:int, 
-            room:int, 
-            area:int, 
-            kitchen:int, 
-            furnished:int, 
-            fire:int, 
-            terrace:int, 
-            terraceArea:int, 
-            garden:int, 
-            gardenArea:int, 
-            surface:int, 
-            facade:int, 
-            pool:int,
-            state:str,
-            saleType:str,
-            propertyType:str,
-            subType:str 
-        ):
+     def __init__(self,url):
             Thread.__init__(self)
-            self.locality = locality
-            self.price = price
-            self.room = room
-            self.area = area
-            self.kitchen = kitchen
-            self.furnished = furnished
-            self.fire = fire
-            self.terrace = terrace
-            self.terraceArea = terraceArea
-            self.garden = garden
-            self.gardenArea = gardenArea
-            self.surface = surface
-            self.facade = facade
-            self.pool = pool
-            self.state = state
-            self.saleType = saleType
-            self.propertyType = propertyType
-            self.subType = subType
+            self.url = url
 
     # def run(self):
-    #   #There we will make a csv file with all data and format them if needed        
+    #   #There we will make a csv file with all data and format them if needed 
+    #   getLocality(driver)
+    #   getPrice(driver)
+    #   getRoom(driver)
+    #   getArea(driver)
+    #   getKitchen(driver)
+    #   getFurnished(driver)
+    #   getFire(driver)
+    #   getTerrace(driver)
+    #   getTerraceArea(driver)
+    #   getGarden(driver)
+    #   getGardenArea(driver)
+    #   getSurface(driver)
+    #   getFacade(driver)
+    #   getPool(driver)
+    #   getState(driver)
+    #   getSaleType(driver)
+    #   getGarden(driver)
+    #   getPropertyType(driver)
+    #   getsubType(driver)
+    # Get all values and append it to a csv file for each thread
