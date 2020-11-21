@@ -1,6 +1,4 @@
-# To add a new cell, type '# %%'
-# To add a new markdown cell, type '# %% [markdown]'
-# %%
+
 import os
 import re
 import csv
@@ -9,36 +7,35 @@ from bs4 import BeautifulSoup as bs
 import shadow_useragent
 
 
-# %%
-url = "https://www.zimmo.be/fr/couvin-5660/a-vendre/maison/JQLJU/?search=82d1fed181cf30aaa8408f90d99003d3"
 
-#url = "https://www.zimmo.be/fr/langemark-8920/a-vendre/maison/JHWY7/?search=3ae7b1a98206095502d8253991210414&boosted=1"
 
+
+
+#url = "https://www.zimmo.be/fr/couvin-5660/a-vendre/maison/JQLJU/?search=82d1fed181cf30aaa8408f90d99003d3"
+
+#to avoid being bloqued by the server
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
-
-# %%
+#requests
 requete = requests.get(url, headers=headers)
 page = requete.content
 soup = bs(page, 'html.parser')
 
+#comment the print line in case we need it
+#print(soup.prettify())
 
-# %%
-print(soup.prettify())
 
-
-# %%
 #locality
-
+datass = []
 loc = soup.find("h2", class_="section-title").text
 loc = loc.split()
 for x in loc:
     if re.match("^[0-9]{4}",x):
         loc = x
-        print(loc)
+        #print(loc)
+        
 
 
-# %%
 #function for determine type and subtype of property
 def itemType(var):
     var = soup.find('ul', class_="main-features").text
@@ -49,16 +46,24 @@ def itemType(var):
     return var
 
 
-# %%
-a = itemType('var')
-a.split('(Maison)')
+#Type of property
+equiv = itemType('var')   # call the function
+
+type_check = re.search('Maison', equiv2)
+
+if type_check != 'None':
+    prop_type = 'House'
+    print(prop_type)
+else:
+    prop_type = 'Apartment'
+    print(prop_type)
 
 
-# %%
+
 #subtype of property
 equiv2 = itemType('var')   # call the function
-#equiv2
-if len(equiv2) > 10:
+
+if len(equiv2) > 10: #to filter if equiv2 return one word, then we don't have the subtype
     type_check2 = re.search('Maison', equiv2)
 
     if type_check2 != 'None':
@@ -70,11 +75,10 @@ if len(equiv2) > 10:
         subtype = subtype[0]
         print(subtype)
 else:
-    print('None')
-#suitemType('subtype')
+    subtype = 'None'
+    print(subtype)
 
 
-# %%
 #determining the price
 
 try:   
@@ -90,10 +94,10 @@ try:
     print(price)
     
 except IndexError:
-    print('None')
+    price = 'None'
+    print(price)
 
 
-# %%
 #number of rooms
 
 try:
@@ -109,10 +113,10 @@ try:
     print(rooms)
 
 except ValueError:
-    print('None')
+    rooms = 'None'
+    print(rooms)
 
 
-# %%
 #Area
 
 try:
@@ -129,10 +133,10 @@ try:
     print(surf)
 
 except ValueError:
-    print('None')
+    surf = 'None'
+    print(surf)
 
 
-# %%
 #private bathroom
 
 try:
@@ -147,10 +151,10 @@ try:
     print(bathroom)
 
 except IndexError:
-    print('None')
+    bathroom = 'None'
+    print(bathroom)
 
 
-# %%
 #State of the building
     #year of build
     
@@ -167,7 +171,7 @@ build_year = build_year.strip()
 
 if build_year == 'sur demande':
     print("None")
-else: 
+else: #intervals are choosen arbitrarily because only the year is avalaible on the website
     if int(build_year) >= 2000:
         State_of_the_building = 'New'
         print(State_of_the_building)
@@ -181,7 +185,6 @@ else:
         print(State_of_the_building)
 
 
-# %%
 #Surface area of the plot of land
 
 if typ_prop == "Maison":
@@ -197,12 +200,13 @@ if typ_prop == "Maison":
       Surfac_land = int(Surfac_land)
       print(Surfac_land)
    except ValueError:
-      print('None')
+       Surfac_land = 'None'
+       print(Surfac_land)
 else:
-    print('None')
+    Surfac_land = 'None'
+    print(Surfac_land)
 
 
-# %%
 #Number of facades
 
 if typ_prop == "Maison":
@@ -215,10 +219,10 @@ if typ_prop == "Maison":
     facades = int(facades)
     print(facades)
 else:
-    print('None')
+    facades = 'None'
+    print(facades)
 
 
-# %%
 #garden 'ungiven area'
 garden = soup.find('section', class_="section-overige overige").text
 garden = garden.split('\n\n\n\n')
@@ -227,43 +231,47 @@ garden = garden.split('\n')
 garden = garden[0]
 
 #garden
-if garden == 'Jardin':
-    print('True')
+if gard == 'Jardin':
+    garden = 'True'
+    print(garden)
 else:
-    print('False')
+    garden = 'True'
+    print(garden)
 
 
-# %%
 #Terasse
 
 try:
     terrace = soup.find('div', class_="column-right").text
-    terrace = terrace.split('Disposition\n\n\n\n')
-    terrace = terrace[1]
-    terrace = terrace.split('\n')
-    terrace = terrace[0]
+    type_check3 = re.search('Terrasse', terrace)
+    if type_check3 != 'None':
+        terrasse = terrace.split('Disposition\n\n\n\n')
+        terrasse = terrace[1]
+        terrasse = terrace.split('\n')
+        terrace = terrace[0]
 
-    if terrace == 'Terrasse':
-        print('Yes')
+        if terrasse == 'Terrasse':
+            terrace == 'Ys'
+            print(terrace)
+        else:
+            terrace == 'No'
+            print(terrace)
     else:
-        print('No')
+            terrace == 'No'
+            print(terrace)
 
 except IndexError:
-    print('No')
+    terrace == 'No'
+    print(terrace)
 
 
-# %%
 #furnished
-#declare a 'No' value when i != 'Yes'
+#declare a 'No' value as Default value for when i != 'Yes'
 
 furn = soup.find('section', class_="section-comfort").text
 furn = furn.split('\n')
 for i in furn:
     if i == 'Meublé':
-        print('Yes')
-
-
-# %%
-
-
-
+        furnished = 'Yes'
+        print(furnished)
+ 
