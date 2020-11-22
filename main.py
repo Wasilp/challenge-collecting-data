@@ -1,5 +1,7 @@
+from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from utils import LinkThread,DetailsThread
+import csv
 
 
 # houseSubTypeStart = 72
@@ -18,11 +20,23 @@ from utils import LinkThread,DetailsThread
     # Computer friendly uncomment it if you don't want to see your cpu burn in the flames of thread.
 #     thread_aptSubTypeStart.join()
     # told u !
+csv_file = open('list_of_datas.csv', 'a')
+
+csv_writer = csv.writer(csv_file)
+
+
+
+#creating headlines of the table
+csv_writer.writerow(['Locality', 'Type of property', 'Subtype of property', 'Price (€)', 'Type of sale',
+                   'Number of rooms', 'Area (m²)', 'Fully equipped kitchen', 'Furnished', 'Open fire',
+                   'Terrace', 'Garden', 'bathroom','Surface area of the plot of land (m²)', 'Number of facades',
+                   'Swimming pool', 'State of the building'])
 
 with open("zimmo_details_link.csv", "r") as a_file:
-  for num,line in enumerate(a_file):
-    stripped_url = line.strip()
-    thread_num = DetailsThread(stripped_url)
-    thread_num.start()
-    # Computer friendly uncomment it if you don't want to see your cpu burn in the flames of thread.
-    thread_num.join()
+     with ThreadPoolExecutor(max_workers=1) as executor:
+          for num,line in enumerate(a_file):
+               stripped_url = line.strip()
+               thread_num = DetailsThread(stripped_url)
+               executor.submit(thread_num.run)
+               # Computer friendly uncomment it if you don't want to see your cpu burn in the flames of thread.
+    
