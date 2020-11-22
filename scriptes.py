@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup as bs
 import shadow_useragent
 
 
-csv_file = open('list_of_datass.csv', 'a')
+csv_file = open('list_of_datas.csv', 'a')
 
 csv_writer = csv.writer(csv_file)
 
@@ -328,7 +328,7 @@ for url in url_list:
 #   temp = scrape_page(url)
 #   #datass.append(temp)       
   
-    csv_writer.writerow([loc, prop_type, subtype, price, Type_sale, rooms, surf, kitchen, Furnished:'No', Open_fire,  terrace, 
+    csv_writer.writerow([loc, prop_type, subtype, price, Type_sale, rooms, surf, kitchen, Furnished, Open_fire,  terrace, 
                          garden, bathroom, Surfac_land, facades, swim_pool, State_of_the_building])
 
 csv_file.close()
