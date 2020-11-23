@@ -6,16 +6,23 @@ import requests
 import selenium
 import csv
 import re
+import os
 import time
 from bs4 import BeautifulSoup as bs
 import shadow_useragent
 from threading import Thread, RLock
 import undetected_chromedriver as uc
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
+from fake_useragent import UserAgent
+from selenium.common.exceptions import TimeoutException
 
 
 
@@ -76,17 +83,15 @@ class DetailsThread(Thread):
             self.url = url
 
      def run(self):
-            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-            print('coucou')
-            #requests
-            requete = requests.get(self.url, headers=headers)
-            page = requete.content
-            soup = BeautifulSoup(page, 'html.parser')
 
-            #comment the print line in case we need it
-            #print(soup.prettify())
-
-
+            driver = uc.Chrome()
+            driver.get(self.url)
+            driver.implicitly_wait(3)
+            driver.find_element_by_id("didomi-notice-agree-button").click()
+            driver.implicitly_wait(3)
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            driver.implicitly_wait(3)
+            
             #locality
             #datass = []
             try:
@@ -365,10 +370,12 @@ class DetailsThread(Thread):
         # datass = []
         # for url in url_list:
         #   temp = scrape_page(url)
-        #   #datass.append(temp)       
+        #   #datass.append(temp)      
+            driver.implicitly_wait(3) 
             csv_file = open('list_of_datas.csv', 'a')
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow([loc, prop_type, subtype, price, Type_sale, rooms, surf, kitchen, Furnished, Open_fire,  terrace, 
                                 garden, bathroom, Surfac_land, facades, swim_pool, State_of_the_building])
-
+            driver.implicitly_wait(200)
             csv_file.close()
+            driver.close()
