@@ -11,6 +11,12 @@ You can set max workers to the limit you want but for now, i would not recommend
 ## Technologies
 Python 3, Selenium, beautifullSoup, Thread, Concurrent.
 
+## Instalation
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Pending things to do
 
 Need to integrate a script that will detect captcha and do it automatically.
